@@ -1,0 +1,52 @@
+.logo {
+  animation: App-logo-spin infinite 60s linear;
+  height: 80px;
+}
+
+.label,
+.tile-subtitle {
+  font-size: 0.6rem;
+}
+
+.btn-primary {
+  background: #4f8fcc !important;
+  border-color: #3b82c6 !important;
+  color: #fff !important;
+}
+
+.btn-link {
+  color: #4f8fcc !important;
+  border: none !important;
+}
+
+.label-success {
+  background: #ecfaee !important;
+  color: #248931 !important;
+}
+
+.label-error {
+  background: #faeeec !important;
+  color: #c74834 !important;
+}
+
+.label-warning {
+  background: #ffeec4 !important;
+  color: #9d7100 !important;
+}
+
+.text-error {
+  color: #c74834 !important;
+}
+
+.bar-item {
+  font-size: 0.6rem !important;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
