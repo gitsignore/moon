@@ -13,6 +13,9 @@ case ${OPTION} in
    "start")
       docker-compose up -d
       ;;
+   "start-prod")
+      docker-compose -f docker-compose-prod.yml up -d --force-recreate --renew-anon-volumes --build
+      ;;
    "restart")
       docker-compose up -d --force-recreate --renew-anon-volumes --build
       ;;
@@ -30,11 +33,12 @@ case ${OPTION} in
       echo -e "${YELLOW}Usage:${NC} \n"
       echo -e "  ${NC}command [argument] \n"
       echo -e "${YELLOW}Available commands:${NC} \n"
-      echo -e "  ${GREEN}start     ${NC}start the app into docker container"
-      echo -e "  ${GREEN}restart   ${NC}restart the app container"
-      echo -e "  ${GREEN}stop      ${NC}stop the app container"
-      echo -e "  ${GREEN}logs      ${NC}show app logs"
-      echo -e "  ${GREEN}npm       ${NC}expose npm from container"
+      echo -e "  ${GREEN}start       ${NC}start the app into docker container"
+      echo -e "  ${GREEN}start-prod  ${NC}start the app for production into docker container"
+      echo -e "  ${GREEN}restart     ${NC}restart the app container"
+      echo -e "  ${GREEN}stop        ${NC}stop the app container"
+      echo -e "  ${GREEN}logs        ${NC}show app logs"
+      echo -e "  ${GREEN}npm         ${NC}expose npm from container"
       exit 1
       ;;
 esac
