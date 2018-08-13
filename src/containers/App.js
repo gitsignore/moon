@@ -25,6 +25,7 @@ class App extends Component {
     );
     socket.on('refresh', users => this.setState({ users }));
 
+    this.form = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleShowForm = this.handleShowForm.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -57,11 +58,31 @@ class App extends Component {
   }
 
   handleShowForm = () => {
-    this.setState(prevState => ({
-      showForm: !prevState.showForm,
-      editForm: false,
-      currentUser: { ...userModel }
-    }));
+    this.setState(
+      prevState => ({
+        showForm: !prevState.showForm,
+        editForm: false,
+        currentUser: { ...userModel }
+      }),
+      () =>
+        this.state.showForm && window.scrollTo(0, this.form.current.offsetTop)
+    );
+  };
+
+  handleEdit = id => {
+    this.setState(
+      prevState => {
+        const currentUser = { ...prevState.users.find(user => user.id === id) };
+        currentUser.focus_time = { ...currentUser.focus_time };
+        return {
+          showForm: true,
+          editForm: true,
+          currentUser: currentUser
+        };
+      },
+      () =>
+        this.state.showForm && window.scrollTo(0, this.form.current.offsetTop)
+    );
   };
 
   handleClickAvatar = event => {
@@ -98,18 +119,6 @@ class App extends Component {
         };
       });
     }
-  };
-
-  handleEdit = id => {
-    this.setState(prevState => {
-      const currentUser = { ...prevState.users.find(user => user.id === id) };
-      currentUser.focus_time = { ...currentUser.focus_time };
-      return {
-        showForm: true,
-        editForm: true,
-        currentUser: currentUser
-      };
-    });
   };
 
   handleDelete = async event => {
@@ -191,16 +200,18 @@ class App extends Component {
                   handleEdit={this.handleEdit}
                   time={time}
                 />
-                <PanelFooter
-                  currentUser={currentUser}
-                  showForm={showForm}
-                  editForm={editForm}
-                  handleShowForm={this.handleShowForm}
-                  handleSubmit={this.handleSubmit}
-                  handleChange={this.handleChange}
-                  handleClickAvatar={this.handleClickAvatar}
-                  handleDelete={this.handleDelete}
-                />
+                <div ref={this.form}>
+                  <PanelFooter
+                    currentUser={currentUser}
+                    showForm={showForm}
+                    editForm={editForm}
+                    handleShowForm={this.handleShowForm}
+                    handleSubmit={this.handleSubmit}
+                    handleChange={this.handleChange}
+                    handleClickAvatar={this.handleClickAvatar}
+                    handleDelete={this.handleDelete}
+                  />
+                </div>
               </div>
             </div>
           </div>
