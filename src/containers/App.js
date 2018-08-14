@@ -162,11 +162,18 @@ class App extends Component {
       );
 
       this.setState(prevState => {
-        const users = prevState.users.filter(user => user.id !== response.id);
-        users.push(response);
+        const userIndex = prevState.users.findIndex(
+          user => user.id === response.id
+        );
+
+        if (userIndex < 0) {
+          prevState.users.push(response);
+        } else {
+          prevState.users[userIndex] = response;
+        }
 
         return {
-          users: users,
+          users: prevState.users,
           currentUser: { ...userModel },
           showForm: false,
           editForm: false
