@@ -65,7 +65,9 @@ class App extends Component {
         currentUser: { ...userModel }
       }),
       () =>
-        this.state.showForm && window.scrollTo(0, this.form.current.offsetTop)
+        this.state.showForm
+          ? window.scrollTo(0, this.form.current.offsetTop)
+          : window.scrollTo(this.form.current.offsetTop, 0)
     );
   };
 
@@ -81,7 +83,9 @@ class App extends Component {
         };
       },
       () =>
-        this.state.showForm && window.scrollTo(0, this.form.current.offsetTop)
+        this.state.showForm
+          ? window.scrollTo(0, this.form.current.offsetTop)
+          : window.scrollTo(this.form.current.offsetTop, 0)
     );
   };
 
