@@ -4,9 +4,9 @@ import displayedStatus from '../helpers/status';
 import sortUsersListByPriority from '../helpers/list';
 import isBusy from '../helpers/time';
 
-const PanelBody = ({ users, currentFilter, handleEdit, time }) => (
+const PanelBody = ({ users, search, currentFilter, handleEdit, time }) => (
   <div className="panel-body text-left">
-    {sortUsersListByPriority(users, currentFilter).map(user => {
+    {sortUsersListByPriority(users, currentFilter, search).map(user => {
       const startTime = moment(user.focus_time.start);
       const endTime = moment(user.focus_time.end);
       const userIsBusy = isBusy(startTime, endTime, time);
@@ -34,7 +34,7 @@ const PanelBody = ({ users, currentFilter, handleEdit, time }) => (
                   <img
                     src={user.avatar}
                     alt="Avatar"
-                    className={userInFocusTime && 'img-focus_time'}
+                    className={userInFocusTime ? 'img-focus_time' : ''}
                   />
                 )}
                 <i className={`avatar-presence ${status}`} />

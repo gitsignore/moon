@@ -1,6 +1,6 @@
 import isBusy from './time';
 
-const sortUsersListByPriority = (usersList, filter = null) =>
+const sortUsersListByPriority = (usersList, filter = null, search = '') =>
   usersList
     .filter(
       user =>
@@ -10,6 +10,11 @@ const sortUsersListByPriority = (usersList, filter = null) =>
               user.focus_time.enabled &&
               isBusy(user.focus_time.start, user.focus_time.end, Date.now()))
           : true
+    )
+    .filter(
+      user =>
+        user.name.toLowerCase().match(search.toLowerCase().trim()) ||
+        user.message.toLowerCase().match(search.toLowerCase().trim())
     )
     .sort((user1, user2) => {
       const busyUser1 =

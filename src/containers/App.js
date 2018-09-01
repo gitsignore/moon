@@ -16,6 +16,7 @@ class App extends Component {
       showForm: false,
       editForm: false,
       users: [],
+      search: '',
       currentFilter: null,
       currentUser: { ...userModel },
       time: Date.now()
@@ -30,6 +31,8 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleShowForm = this.handleShowForm.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
     this.handleClickAvatar = this.handleClickAvatar.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleClickFilter = this.handleClickFilter.bind(this);
@@ -104,6 +107,12 @@ class App extends Component {
         prevState.currentFilter !== filterName ? filterName : null;
     });
   };
+
+  handleSearch = event => {
+    this.setState({ search: event.target.value });
+  };
+
+  clearSearch = () => this.setState({ search: '' });
 
   handleChange = (event, ref = false) => {
     if (event && !event.target && ref) {
@@ -201,6 +210,7 @@ class App extends Component {
     const {
       users,
       time,
+      search,
       showForm,
       editForm,
       currentUser,
@@ -221,13 +231,17 @@ class App extends Component {
             <div className="column col-10 col-lg-12 col-mx-auto mt-2">
               <div className="panel">
                 <PanelHeader
+                  search={search}
                   time={time}
                   currentFilter={currentFilter}
+                  handleSearch={this.handleSearch}
+                  clearSearch={this.clearSearch}
                   handleClickFilter={this.handleClickFilter}
                 />
                 <div className="divider" />
                 <PanelBody
                   users={users}
+                  search={search}
                   currentFilter={currentFilter}
                   handleEdit={this.handleEdit}
                   time={time}
