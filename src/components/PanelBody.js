@@ -4,9 +4,9 @@ import displayedStatus from '../helpers/status';
 import sortUsersListByPriority from '../helpers/list';
 import isBusy from '../helpers/time';
 
-const PanelBody = ({ users, handleEdit, time }) => (
+const PanelBody = ({ users, currentFilter, handleEdit, time }) => (
   <div className="panel-body text-left">
-    {sortUsersListByPriority(users).map(user => {
+    {sortUsersListByPriority(users, currentFilter).map(user => {
       const startTime = moment(user.focus_time.start);
       const endTime = moment(user.focus_time.end);
       const userIsBusy = isBusy(startTime, endTime, time);
