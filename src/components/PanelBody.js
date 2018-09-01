@@ -1,17 +1,18 @@
 import React from 'react';
 import moment from 'moment';
-import displayedStatus from '../constants/status';
-import isBusy from '../constants/time';
+import displayedStatus from '../helpers/status';
+import sortUsersListByPriority from '../helpers/list';
+import isBusy from '../helpers/time';
 
 const PanelBody = ({ users, handleEdit, time }) => (
   <div className="panel-body text-left">
-    {users.map(user => {
+    {sortUsersListByPriority(users).map(user => {
       const startTime = moment(user.focus_time.start);
       const endTime = moment(user.focus_time.end);
+      const userIsBusy = isBusy(startTime, endTime, time);
+      const userInFocusTime = userIsBusy && user.focus_time.enabled;
       const status =
-        user.focus_time &&
-        user.focus_time.enabled &&
-        isBusy(startTime, endTime, time)
+        user.focus_time && user.focus_time.enabled && userIsBusy
           ? 'busy'
           : user.status;
       const timeline = endTime.diff(startTime, 'seconds');
@@ -20,6 +21,7 @@ const PanelBody = ({ users, handleEdit, time }) => (
         100 -
         (endTime.diff(time, 'seconds') * 100) / timeline
       ).toFixed(1);
+
       return (
         <div key={user.id}>
           <div className="tile" onClick={() => handleEdit(user.id)}>
@@ -28,12 +30,23 @@ const PanelBody = ({ users, handleEdit, time }) => (
                 className="avatar avatar-xl text-uppercase"
                 data-initial={user.name.substring(0, 2)}
               >
-                {user.avatar && <img src={user.avatar} alt="Avatar" />}
+                {user.avatar && (
+                  <img
+                    src={user.avatar}
+                    alt="Avatar"
+                    className={userInFocusTime && 'img-focus_time'}
+                  />
+                )}
                 <i className={`avatar-presence ${status}`} />
               </figure>
             </div>
             <div className="tile-content">
-              <p className="tile-title text-bold m-0">{user.name}</p>
+              <p
+                className={`tile-title text-bold m-0 ${userInFocusTime &&
+                  'text-focus_time'}`}
+              >
+                {user.name}
+              </p>
               <p className="m-0">
                 <span
                   className={`label label-${displayedStatus[status].color}`}
@@ -48,11 +61,7 @@ const PanelBody = ({ users, handleEdit, time }) => (
               !moment(time).isAfter(endTime) && (
                 <div className="tile-action">
                   <p
-                    className={
-                      isBusy(startTime, endTime, time)
-                        ? 'text-error'
-                        : 'text-warning'
-                    }
+                    className={userIsBusy ? 'text-focus_time' : 'text-warning'}
                   >{`${startTime.format('HH:mm')} - ${endTime.format(
                     'HH:mm'
                   )}`}</p>
@@ -60,13 +69,13 @@ const PanelBody = ({ users, handleEdit, time }) => (
                     <div className="bar">
                       <div
                         className="bar-item tooltip"
-                        data-tooltip={`${remainingTime}min left`}
+                        data-tooltip={`${remainingTime + 1}min left`}
                         role="progressbar"
                         style={{
                           width: `${progressTime}%`
                         }}
                       >
-                        {`${remainingTime}min left`}
+                        {`${remainingTime + 1}min left`}
                       </div>
                     </div>
                   )}

@@ -42,6 +42,14 @@
   font-size: 0.6rem !important;
 }
 
+.text-focus_time {
+  color: #ff1d39;
+}
+
+.img-focus_time {
+  border: 2px solid #ff1d39;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
