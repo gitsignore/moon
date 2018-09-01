@@ -19,19 +19,27 @@
   border: none !important;
 }
 
-.label-success {
+.label-success,
+.chip-success {
   background: #ecfaee !important;
   color: #248931 !important;
 }
 
-.label-error {
+.label-error,
+.chip-error {
   background: #faeeec !important;
   color: #c74834 !important;
 }
 
-.label-warning {
+.label-warning,
+.chip-warning {
   background: #ffeec4 !important;
   color: #9d7100 !important;
+}
+
+.chip-secondary {
+  background: #f1f1fc;
+  color: #5755d9;
 }
 
 .text-error {

@@ -16,6 +16,7 @@ class App extends Component {
       showForm: false,
       editForm: false,
       users: [],
+      currentFilter: null,
       currentUser: { ...userModel },
       time: Date.now()
     };
@@ -31,6 +32,7 @@ class App extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleClickAvatar = this.handleClickAvatar.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleClickFilter = this.handleClickFilter.bind(this);
   }
 
   async componentDidMount() {
@@ -93,6 +95,13 @@ class App extends Component {
     const uri = event.target.src;
     this.setState(prevState => {
       prevState.currentUser.avatar = uri;
+    });
+  };
+
+  handleClickFilter = filterName => {
+    this.setState(prevState => {
+      prevState.currentFilter =
+        prevState.currentFilter !== filterName ? filterName : null;
     });
   };
 
@@ -189,7 +198,14 @@ class App extends Component {
   };
 
   render() {
-    const { users, time, showForm, editForm, currentUser } = this.state;
+    const {
+      users,
+      time,
+      showForm,
+      editForm,
+      currentUser,
+      currentFilter
+    } = this.state;
     return (
       <div className="App container">
         <div className="columns">
@@ -204,10 +220,15 @@ class App extends Component {
             </div>
             <div className="column col-10 col-lg-12 col-mx-auto mt-2">
               <div className="panel">
-                <PanelHeader time={time} />
+                <PanelHeader
+                  time={time}
+                  currentFilter={currentFilter}
+                  handleClickFilter={this.handleClickFilter}
+                />
                 <div className="divider" />
                 <PanelBody
                   users={users}
+                  currentFilter={currentFilter}
                   handleEdit={this.handleEdit}
                   time={time}
                 />
