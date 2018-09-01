@@ -4,7 +4,7 @@ import Client from '@gitsignore/http-client';
 import PanelHeader from '../components/PanelHeader';
 import PanelBody from '../components/PanelBody';
 import PanelFooter from '../components/PanelFooter';
-import userModel from '../constants/userModel';
+import userModel from '../helpers/userModel';
 import moon from '../assets/images/moon.png';
 import './App.css';
 
