@@ -2,7 +2,14 @@ import React from 'react';
 import moment from 'moment';
 import status from '../helpers/status';
 
-const PanelHeader = ({ time, currentFilter, handleClickFilter }) => (
+const PanelHeader = ({
+  search,
+  time,
+  currentFilter,
+  handleClickFilter,
+  clearSearch,
+  handleSearch
+}) => (
   <div className="panel-header">
     <div>
       <div className="panel-title h3 d-inline-block">
@@ -23,6 +30,17 @@ const PanelHeader = ({ time, currentFilter, handleClickFilter }) => (
           {status[0]}
         </span>
       ))}
+    </div>
+    <div className="has-icon-right mt-2">
+      <input
+        id="search"
+        className="form-input"
+        type="text"
+        value={search}
+        onChange={handleSearch}
+        placeholder="Search"
+      />
+      <i className="form-icon icon icon-cross" onClick={clearSearch} />
     </div>
   </div>
 );

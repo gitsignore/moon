@@ -4,9 +4,9 @@ import displayedStatus from '../helpers/status';
 import sortUsersListByPriority from '../helpers/list';
 import isBusy from '../helpers/time';
 
-const PanelBody = ({ users, currentFilter, handleEdit, time }) => (
+const PanelBody = ({ users, search, currentFilter, handleEdit, time }) => (
   <div className="panel-body text-left">
-    {sortUsersListByPriority(users, currentFilter).map(user => {
+    {sortUsersListByPriority(users, currentFilter, search).map(user => {
       const startTime = moment(user.focus_time.start);
       const endTime = moment(user.focus_time.end);
       const userIsBusy = isBusy(startTime, endTime, time);
@@ -22,7 +22,7 @@ const PanelBody = ({ users, currentFilter, handleEdit, time }) => (
         (endTime.diff(time, 'seconds') * 100) / timeline
       ).toFixed(1);
 
-      return (
+      return user ? (
         <div key={user.id}>
           <div className="tile" onClick={() => handleEdit(user.id)}>
             <div className="tile-icon">
@@ -34,7 +34,7 @@ const PanelBody = ({ users, currentFilter, handleEdit, time }) => (
                   <img
                     src={user.avatar}
                     alt="Avatar"
-                    className={userInFocusTime && 'img-focus_time'}
+                    className={userInFocusTime ? 'img-focus_time' : ''}
                   />
                 )}
                 <i className={`avatar-presence ${status}`} />
@@ -83,6 +83,14 @@ const PanelBody = ({ users, currentFilter, handleEdit, time }) => (
               )}
           </div>
           <div className="divider" />
+        </div>
+      ) : (
+        <div className="empty">
+          <div className="empty-icon">
+            <i className="icon icon-3x icon-people" />
+          </div>
+          <p className="empty-title h5">You are not following anyone</p>
+          <p className="empty-subtitle">Start to meet new friends</p>
         </div>
       );
     })}
