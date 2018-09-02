@@ -19,7 +19,7 @@ class App extends Component {
       search: '',
       currentFilter: null,
       currentUser: { ...userModel },
-      time: Date.now()
+      time: Date.now(),
     };
 
     const socket = openSocket(
@@ -43,19 +43,13 @@ class App extends Component {
       const response = await Client.GET('', {
         url: process.env.REACT_APP_API_URI,
         port: process.env.REACT_APP_API_PORT,
-        entrypoint: process.env.REACT_APP_API_ENTRYPOINT
+        entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
       });
       this.setState({ users: response });
       this.interval = setInterval(() => this.tick(), 1000);
     } catch (error) {
-      console.error(error);
+      throw error;
     }
-  }
-
-  tick() {
-    this.setState({
-      time: Date.now()
-    });
   }
 
   componentWillUnmount() {
@@ -67,12 +61,14 @@ class App extends Component {
       prevState => ({
         showForm: !prevState.showForm,
         editForm: false,
-        currentUser: { ...userModel }
+        currentUser: { ...userModel },
       }),
-      () =>
-        this.state.showForm
+      () => {
+        const { showForm } = this.state;
+        return showForm
           ? window.scrollTo(0, this.form.current.offsetTop)
-          : window.scrollTo(this.form.current.offsetTop, 0)
+          : window.scrollTo(this.form.current.offsetTop, 0);
+      }
     );
   };
 
@@ -84,28 +80,34 @@ class App extends Component {
         return {
           showForm: true,
           editForm: true,
-          currentUser: currentUser
+          currentUser,
         };
       },
-      () =>
-        this.state.showForm
+      () => {
+        const { showForm } = this.state;
+        return showForm
           ? window.scrollTo(0, this.form.current.offsetTop)
-          : window.scrollTo(this.form.current.offsetTop, 0)
+          : window.scrollTo(this.form.current.offsetTop, 0);
+      }
     );
   };
 
   handleClickAvatar = event => {
-    const uri = event.target.src;
+    const { src } = event.target;
     this.setState(prevState => {
-      prevState.currentUser.avatar = uri;
+      const user = Object.assign({}, prevState.currentUser);
+      user.avatar = src;
+
+      return {
+        currentUser: user,
+      };
     });
   };
 
   handleClickFilter = filterName => {
-    this.setState(prevState => {
-      prevState.currentFilter =
-        prevState.currentFilter !== filterName ? filterName : null;
-    });
+    this.setState(prevState => ({
+      currentFilter: prevState.currentFilter !== filterName ? filterName : null,
+    }));
   };
 
   handleSearch = event => {
@@ -117,16 +119,21 @@ class App extends Component {
   handleChange = (event, ref = false) => {
     if (event && !event.target && ref) {
       this.setState(prevState => {
-        prevState.currentUser.focus_time[ref] = event.seconds(0).format();
+        const user = Object.assign({}, prevState.currentUser);
+        user.focus_time[ref] = event.seconds(0).format();
+
+        return {
+          currentUser: user,
+        };
       });
     } else {
-      const type = event.target.type;
+      const { type } = event.target;
       const isFocusTimeElement = event.target.id.match('focus_time_');
       const id = isFocusTimeElement
         ? event.target.id.replace('focus_time_', '')
         : event.target.id;
       const value =
-        'checkbox' === type ? event.target.checked : event.target.value;
+        type === 'checkbox' ? event.target.checked : event.target.value;
 
       this.setState(prevState => {
         const user = prevState.currentUser;
@@ -137,7 +144,7 @@ class App extends Component {
         }
 
         return {
-          currentUser: user
+          currentUser: user,
         };
       });
     }
@@ -145,41 +152,40 @@ class App extends Component {
 
   handleDelete = async event => {
     event.preventDefault();
+    const { currentUser } = this.state;
     try {
-      const response = await Client.DELETE(`/${this.state.currentUser.id}`, {
+      const response = await Client.DELETE(`/${currentUser.id}`, {
         url: process.env.REACT_APP_API_URI,
         port: process.env.REACT_APP_API_PORT,
-        entrypoint: process.env.REACT_APP_API_ENTRYPOINT
+        entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
       });
 
-      this.setState(prevState => {
-        return {
-          users: prevState.users.filter(
-            user => user.id !== response.id.toString()
-          ),
-          currentUser: { ...userModel },
-          showForm: false,
-          editForm: false
-        };
-      });
+      this.setState(prevState => ({
+        users: prevState.users.filter(
+          user => user.id !== response.id.toString()
+        ),
+        currentUser: { ...userModel },
+        showForm: false,
+        editForm: false,
+      }));
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   };
 
   handleSubmit = async event => {
     event.preventDefault();
 
-    const editingUser = this.state.editForm;
+    const { currentUser, editForm } = this.state;
 
     try {
-      const response = await Client[editingUser ? 'PUT' : 'POST'](
-        `/${editingUser ? this.state.currentUser.id : ''}`,
-        this.state.currentUser,
+      const response = await Client[editForm ? 'PUT' : 'POST'](
+        `/${editForm ? currentUser.id : ''}`,
+        currentUser,
         {
           url: process.env.REACT_APP_API_URI,
           port: process.env.REACT_APP_API_PORT,
-          entrypoint: process.env.REACT_APP_API_ENTRYPOINT
+          entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
         }
       );
 
@@ -188,23 +194,30 @@ class App extends Component {
           user => user.id === response.id
         );
 
+        const users = prevState.users.slice();
         if (userIndex < 0) {
-          prevState.users.push(response);
+          users.push(response);
         } else {
-          prevState.users[userIndex] = response;
+          users[userIndex] = response;
         }
 
         return {
-          users: prevState.users,
+          users,
           currentUser: { ...userModel },
           showForm: false,
-          editForm: false
+          editForm: false,
         };
       });
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   };
+
+  tick() {
+    this.setState({
+      time: Date.now(),
+    });
+  }
 
   render() {
     const {
@@ -214,7 +227,7 @@ class App extends Component {
       showForm,
       editForm,
       currentUser,
-      currentFilter
+      currentFilter,
     } = this.state;
     return (
       <div className="App container">

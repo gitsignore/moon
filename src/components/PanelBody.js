@@ -1,10 +1,11 @@
 import React from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import displayedStatus from '../helpers/status';
 import sortUsersListByPriority from '../helpers/list';
 import isBusy from '../helpers/time';
 
-const PanelBody = ({ users, search, currentFilter, handleEdit, time }) => (
+const PanelBody = ({ users, search, time, currentFilter, handleEdit }) => (
   <div className="panel-body text-left">
     {sortUsersListByPriority(users, currentFilter, search).map(user => {
       const startTime = moment(user.focus_time.start);
@@ -24,7 +25,13 @@ const PanelBody = ({ users, search, currentFilter, handleEdit, time }) => (
 
       return (
         <div key={user.id}>
-          <div className="tile" onClick={() => handleEdit(user.id)}>
+          <div
+            className="tile"
+            role="button"
+            tabIndex={0}
+            onClick={() => handleEdit(user.id)}
+            onKeyPress={() => handleEdit(user.id)}
+          >
             <div className="tile-icon">
               <figure
                 className="avatar avatar-xl text-uppercase"
@@ -62,9 +69,11 @@ const PanelBody = ({ users, search, currentFilter, handleEdit, time }) => (
                 <div className="tile-action">
                   <p
                     className={userIsBusy ? 'text-focus_time' : 'text-warning'}
-                  >{`${startTime.format('HH:mm')} - ${endTime.format(
-                    'HH:mm'
-                  )}`}</p>
+                  >
+                    {`${startTime.format('HH:mm')} - ${endTime.format(
+                      'HH:mm'
+                    )}`}
+                  </p>
                   {!moment(time).isBefore(startTime) && (
                     <div className="bar">
                       <div
@@ -72,7 +81,7 @@ const PanelBody = ({ users, search, currentFilter, handleEdit, time }) => (
                         data-tooltip={`${remainingTime + 1}min left`}
                         role="progressbar"
                         style={{
-                          width: `${progressTime}%`
+                          width: `${progressTime}%`,
                         }}
                       >
                         {`${remainingTime + 1}min left`}
@@ -88,5 +97,17 @@ const PanelBody = ({ users, search, currentFilter, handleEdit, time }) => (
     })}
   </div>
 );
+
+PanelBody.propTypes = {
+  users: PropTypes.arrayOf(PropTypes.object).isRequired,
+  search: PropTypes.string.isRequired,
+  time: PropTypes.number.isRequired,
+  currentFilter: PropTypes.string,
+  handleEdit: PropTypes.func.isRequired,
+};
+
+PanelBody.defaultProps = {
+  currentFilter: null,
+};
 
 export default PanelBody;

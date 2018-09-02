@@ -6,7 +6,7 @@ const sortUsersListByPriority = (usersList, filter = null, search = '') =>
       user =>
         filter
           ? user.status === filter ||
-            ('busy' === filter &&
+            (filter === 'busy' &&
               user.focus_time.enabled &&
               isBusy(user.focus_time.start, user.focus_time.end, Date.now()))
           : true

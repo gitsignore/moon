@@ -11,8 +11,8 @@ const user = {
   focus_time: {
     enabled: false,
     start: moment().format(),
-    end: moment().format()
-  }
+    end: moment().format(),
+  },
 };
 
 export default user;
