@@ -85,15 +85,15 @@ const PanelFooter = ({
               />
               <div className="divider text-center" data-content="OR" />
               <div className="colums">
-                <div className="col-12 col-mx-auto">
+                <div className="col-12 col-mx-auto text-center">
                   {avatars.map(avatar => (
                     <div
-                      className="d-inline-block"
+                      className="d-inline-block c-hand"
                       key={avatar}
                       role="button"
                       tabIndex={0}
-                      onClick={handleClickAvatar}
-                      onKeyPress={handleClickAvatar}
+                      onClick={() => handleClickAvatar(avatar)}
+                      onKeyPress={() => handleClickAvatar(avatar)}
                     >
                       <figure className="avatar m-2">
                         <img src={avatar} alt="avatar-icon" />

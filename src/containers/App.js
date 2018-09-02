@@ -92,11 +92,10 @@ class App extends Component {
     );
   };
 
-  handleClickAvatar = event => {
-    const { src } = event.target;
+  handleClickAvatar = avatar => {
     this.setState(prevState => {
       const user = Object.assign({}, prevState.currentUser);
-      user.avatar = src;
+      user.avatar = avatar;
 
       return {
         currentUser: user,
