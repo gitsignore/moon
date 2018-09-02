@@ -3,25 +3,31 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@gitsignore/http-client": "^1.0.1",
-    "rc-time-picker": "^3.3.1",
+    "@gitsignore/http-client": "^1.0.2",
+    "moment": "^2.22.2",
+    "prop-types": "^15.6.2",
+    "rc-time-picker": "^3.4.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-scripts": "1.1.4",
+    "react-scripts": "1.1.5",
     "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0"
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-react": "^7.11.1",
+    "prettier": "^1.14.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint"
+    "lint": "eslint --ext=js --ext=jsx --fix ."
   }
 }

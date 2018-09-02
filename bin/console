@@ -28,6 +28,9 @@ case ${OPTION} in
    "npm")
       docker exec -it $APP_NAME npm ${2} ${3} ${4} ${5}
       ;;
+   "lint")
+      docker exec -it $APP_NAME npm run lint
+      ;;
    *)
       echo -e "${BLUE}Console Tool${NC} \n"
       echo -e "${YELLOW}Usage:${NC} \n"
@@ -39,6 +42,7 @@ case ${OPTION} in
       echo -e "  ${GREEN}stop        ${NC}stop the app container"
       echo -e "  ${GREEN}logs        ${NC}show app logs"
       echo -e "  ${GREEN}npm         ${NC}expose npm from container"
+      echo -e "  ${GREEN}lint        ${NC}lint the app from container"
       exit 1
       ;;
 esac

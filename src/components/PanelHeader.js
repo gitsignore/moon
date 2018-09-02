@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import status from '../helpers/status';
 
 const PanelHeader = ({
@@ -8,7 +9,7 @@ const PanelHeader = ({
   currentFilter,
   handleClickFilter,
   clearSearch,
-  handleSearch
+  handleSearch,
 }) => (
   <div className="panel-header">
     <div>
@@ -20,14 +21,17 @@ const PanelHeader = ({
       </div>
     </div>
     <div>
-      {Object.entries(status).map(status => (
+      {Object.entries(status).map(currentStatus => (
         <span
-          key={status[0]}
-          className={`chip ${currentFilter === status[0] &&
-            `chip-${status[1].color}`}`}
-          onClick={() => handleClickFilter(status[0])}
+          key={currentStatus[0]}
+          className={`chip ${currentFilter === currentStatus[0] &&
+            `chip-${currentStatus[1].color}`}`}
+          role="button"
+          tabIndex={0}
+          onClick={() => handleClickFilter(currentStatus[0])}
+          onKeyPress={() => handleClickFilter(currentStatus[0])}
         >
-          {status[0]}
+          {currentStatus[0]}
         </span>
       ))}
     </div>
@@ -40,9 +44,28 @@ const PanelHeader = ({
         onChange={handleSearch}
         placeholder="Search"
       />
-      <i className="form-icon icon icon-cross" onClick={clearSearch} />
+      <i
+        className="form-icon icon icon-cross"
+        role="button"
+        tabIndex={0}
+        onClick={clearSearch}
+        onKeyPress={clearSearch}
+      />
     </div>
   </div>
 );
+
+PanelHeader.propTypes = {
+  search: PropTypes.string.isRequired,
+  time: PropTypes.number.isRequired,
+  currentFilter: PropTypes.string,
+  handleClickFilter: PropTypes.func.isRequired,
+  clearSearch: PropTypes.func.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+};
+
+PanelHeader.defaultProps = {
+  currentFilter: null,
+};
 
 export default PanelHeader;

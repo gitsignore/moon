@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
 import avatars from '../constants/icons';
@@ -12,7 +13,7 @@ const PanelFooter = ({
   handleSubmit,
   handleChange,
   handleClickAvatar,
-  handleDelete
+  handleDelete,
 }) => (
   <div className="panel-footer">
     {showForm && (
@@ -32,6 +33,7 @@ const PanelFooter = ({
           <div className="col-3">
             <button
               className="btn btn-link btn-action btn-lg float-right"
+              type="button"
               onClick={handleShowForm}
             >
               <i className="icon icon-cross" />
@@ -83,15 +85,20 @@ const PanelFooter = ({
               />
               <div className="divider text-center" data-content="OR" />
               <div className="colums">
-                <div className="col-9 col-sm-12 col-mx-auto">
+                <div className="col-12 col-mx-auto">
                   {avatars.map(avatar => (
-                    <figure key={avatar} className="avatar avatar m-2">
-                      <img
-                        src={avatar}
-                        alt="avatar-icon"
-                        onClick={handleClickAvatar}
-                      />
-                    </figure>
+                    <div
+                      className="d-inline-block"
+                      key={avatar}
+                      role="button"
+                      tabIndex={0}
+                      onClick={handleClickAvatar}
+                      onKeyPress={handleClickAvatar}
+                    >
+                      <figure className="avatar m-2">
+                        <img src={avatar} alt="avatar-icon" />
+                      </figure>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -147,7 +154,8 @@ const PanelFooter = ({
                   checked={currentUser.focus_time.enabled}
                   onChange={handleChange}
                 />
-                <i className="form-icon" /> Enable focus time ?
+                <i className="form-icon" />
+                Enable focus time ?
               </label>
             </div>
           </div>
@@ -194,11 +202,37 @@ const PanelFooter = ({
       </div>
     )}
     {!showForm && (
-      <button className="btn btn-primary btn-block" onClick={handleShowForm}>
+      <button
+        className="btn btn-primary btn-block"
+        type="button"
+        onClick={handleShowForm}
+      >
         Add team member
       </button>
     )}
   </div>
 );
+
+PanelFooter.propTypes = {
+  currentUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    avatar: PropTypes.string,
+    status: PropTypes.string.isRequired,
+    message: PropTypes.string,
+    focus_time: PropTypes.shape({
+      enabled: PropTypes.bool.isRequired,
+      start: PropTypes.string.isRequired,
+      end: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  showForm: PropTypes.bool.isRequired,
+  editForm: PropTypes.bool.isRequired,
+  handleShowForm: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleClickAvatar: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+};
 
 export default PanelFooter;
