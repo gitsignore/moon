@@ -24,7 +24,7 @@ const PanelBody = ({ users, search, time, currentFilter, handleEdit }) => (
       ).toFixed(1);
 
       return (
-        <div key={user.id}>
+        <div key={user.id} className="c-hand">
           <div
             className="tile"
             role="button"
