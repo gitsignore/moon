@@ -25,7 +25,7 @@ const PanelHeader = ({
         <span
           key={currentStatus[0]}
           className={`chip ${currentFilter === currentStatus[0] &&
-            `chip-${currentStatus[1].color}`}`}
+            `chip-${currentStatus[1].color}`} c-hand`}
           role="button"
           tabIndex={0}
           onClick={() => handleClickFilter(currentStatus[0])}
@@ -45,7 +45,7 @@ const PanelHeader = ({
         placeholder="Search"
       />
       <i
-        className="form-icon icon icon-cross"
+        className="form-icon icon icon-cross c-hand"
         role="button"
         tabIndex={0}
         onClick={clearSearch}
