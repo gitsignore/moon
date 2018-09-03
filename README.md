@@ -1,6 +1,6 @@
 # Moon &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/gitsignore/moon/blob/master/LICENSE)
 
-Moon is a beautiful web interface to define team statuses like online, busy, away or offline.
+Moon is a beautiful web interface to define team statuses like online, busy, away or offline.Your team should be focus on their work only, let Moon manage your time availability.
 
 ![moon-preview](src/assets/preview/moon.gif)
 
@@ -8,7 +8,7 @@ In addition, you can set a focus time to keep your attention on specific tasks.
 
 ## Installation
 
-To use `Moon` app you also need to install [moon-api](https://github.com/gitsignore/moon-api).
+To use `Moon` app you also need to install [moon-storage](https://github.com/gitsignore/moon-storage).
 
 1. Docker installation
 

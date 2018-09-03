@@ -9,3 +9,5 @@ services:
       dockerfile: Dockerfile.prod
     ports:
       - '${PORT}:80'
+    environment:
+      - NODE_ENV=production
