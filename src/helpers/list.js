@@ -29,4 +29,11 @@ const sortUsersListByPriority = (usersList, filter = null, search = '') =>
         : busyUser2 - busyUser1;
     });
 
-export default sortUsersListByPriority;
+const filterTeamsBySearch = (teamsList, search = '') =>
+  teamsList.filter(
+    team =>
+      team.name.toLowerCase().match(search.toLowerCase().trim()) ||
+      team.message.toLowerCase().match(search.toLowerCase().trim())
+  );
+
+export { sortUsersListByPriority, filterTeamsBySearch };

@@ -4,28 +4,25 @@ import Client from '@gitsignore/http-client';
 import PanelHeader from '../components/PanelHeader';
 import PanelBody from '../components/PanelBody';
 import PanelFooter from '../components/PanelFooter';
-import userModel from '../helpers/userModel';
-import moon from '../assets/images/moon.png';
-import './App.css';
+import UserCollection from '../models/UserCollection';
+import UserModel from '../models/UserModel';
+import TeamModel from '../models/TeamModel';
 
-class App extends Component {
+class Users extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       showForm: false,
       editForm: false,
-      users: [],
+      team: new TeamModel(),
+      users: new UserCollection(),
       search: '',
+      errors: null,
       currentFilter: null,
-      currentUser: { ...userModel },
+      currentUser: new UserModel(),
       time: Date.now(),
     };
-
-    const socket = openSocket(
-      `${process.env.REACT_APP_API_URI}:${process.env.REACT_APP_API_PORT}`
-    );
-    socket.on('refresh', users => this.setState({ users }));
 
     this.form = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,16 +36,33 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    const { match, history } = this.props;
+
     try {
-      const response = await Client.GET('', {
+      const response = await Client.GET(`/${match.params.id}`, {
         url: process.env.REACT_APP_API_URI,
         port: process.env.REACT_APP_API_PORT,
         entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
       });
-      this.setState({ users: response });
+
+      const userCollection = new UserCollection(response.users);
+      this.setState({ team: response, users: userCollection });
+
+      const socket = openSocket(
+        `${process.env.REACT_APP_API_URI}:${process.env.REACT_APP_API_PORT}`
+      );
+      socket.on(`update_team_${match.params.id}`, team =>
+        this.setState({
+          team: team || new TeamModel(),
+          users:
+            team && team.users
+              ? new UserCollection(team.users)
+              : new UserCollection(),
+        })
+      );
       this.interval = setInterval(() => this.tick(), 1000);
     } catch (error) {
-      throw error;
+      history.push('/');
     }
   }
 
@@ -61,7 +75,7 @@ class App extends Component {
       prevState => ({
         showForm: !prevState.showForm,
         editForm: false,
-        currentUser: { ...userModel },
+        currentUser: new UserModel(),
       }),
       () => {
         const { showForm } = this.state;
@@ -73,16 +87,14 @@ class App extends Component {
   };
 
   handleEdit = id => {
+    const user = new UserModel();
     this.setState(
-      prevState => {
-        const currentUser = { ...prevState.users.find(user => user.id === id) };
-        currentUser.focus_time = { ...currentUser.focus_time };
-        return {
-          showForm: true,
-          editForm: true,
-          currentUser,
-        };
-      },
+      prevState => ({
+        showForm: true,
+        editForm: true,
+        errors: null,
+        currentUser: user.setUser(prevState.users.findOneById(id)),
+      }),
       () => {
         const { showForm } = this.state;
         return showForm
@@ -136,6 +148,8 @@ class App extends Component {
 
       this.setState(prevState => {
         const user = prevState.currentUser;
+        const errors = Object.assign({}, prevState.errors);
+        delete errors[id];
         if (isFocusTimeElement) {
           user.focus_time[id] = value;
         } else {
@@ -144,6 +158,7 @@ class App extends Component {
 
         return {
           currentUser: user,
+          errors,
         };
       });
     }
@@ -151,19 +166,22 @@ class App extends Component {
 
   handleDelete = async event => {
     event.preventDefault();
+
     const { currentUser } = this.state;
+    const { match } = this.props;
     try {
-      const response = await Client.DELETE(`/${currentUser.id}`, {
-        url: process.env.REACT_APP_API_URI,
-        port: process.env.REACT_APP_API_PORT,
-        entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-      });
+      const response = await Client.DELETE(
+        `/${match.params.id}/users/${currentUser.id}`,
+        {
+          url: process.env.REACT_APP_API_URI,
+          port: process.env.REACT_APP_API_PORT,
+          entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
+        }
+      );
 
       this.setState(prevState => ({
-        users: prevState.users.filter(
-          user => user.id !== response.id.toString()
-        ),
-        currentUser: { ...userModel },
+        users: prevState.users.removeById(response.userId.toString()),
+        currentUser: new UserModel(),
         showForm: false,
         editForm: false,
       }));
@@ -176,10 +194,10 @@ class App extends Component {
     event.preventDefault();
 
     const { currentUser, editForm } = this.state;
-
+    const { match } = this.props;
     try {
       const response = await Client[editForm ? 'PUT' : 'POST'](
-        `/${editForm ? currentUser.id : ''}`,
+        `/${match.params.id}/users/${editForm ? currentUser.id : ''}`,
         currentUser,
         {
           url: process.env.REACT_APP_API_URI,
@@ -188,25 +206,30 @@ class App extends Component {
         }
       );
 
-      this.setState(prevState => {
-        const userIndex = prevState.users.findIndex(
-          user => user.id === response.id
-        );
+      if (response.errors) {
+        this.setState({ errors: response.errors });
+      } else {
+        this.setState(prevState => {
+          const userIndex = prevState.users
+            .getData()
+            .findIndex(user => user.id === response.id);
 
-        const users = prevState.users.slice();
-        if (userIndex < 0) {
-          users.push(response);
-        } else {
-          users[userIndex] = response;
-        }
+          const users = prevState.users.getData().slice();
+          if (userIndex < 0) {
+            users.push(response);
+          } else {
+            users[userIndex] = response;
+          }
 
-        return {
-          users,
-          currentUser: { ...userModel },
-          showForm: false,
-          editForm: false,
-        };
-      });
+          const userCollection = new UserCollection(users);
+          return {
+            users: userCollection,
+            currentUser: new UserModel(),
+            showForm: false,
+            editForm: false,
+          };
+        });
+      }
     } catch (error) {
       throw error;
     }
@@ -221,6 +244,8 @@ class App extends Component {
   render() {
     const {
       users,
+      team,
+      errors,
       time,
       search,
       showForm,
@@ -229,54 +254,46 @@ class App extends Component {
       currentFilter,
     } = this.state;
     return (
-      <div className="App container">
-        <div className="columns">
-          <div className="column col-6 col-lg-8 col-md-10 col-sm-12 col-mx-auto mt-2">
-            <div className="navbar mt-2">
-              <div className="navbar-section" />
-              <div className="navbar-center">
-                <img src={moon} className="logo" alt="moon-logo" />
-                <h1 className="pt-2">&nbsp;Moon</h1>
-              </div>
-              <div className="navbar-section" />
-            </div>
-            <div className="column col-10 col-lg-12 col-mx-auto mt-2">
-              <div className="panel">
-                <PanelHeader
-                  search={search}
-                  time={time}
-                  currentFilter={currentFilter}
-                  handleSearch={this.handleSearch}
-                  clearSearch={this.clearSearch}
-                  handleClickFilter={this.handleClickFilter}
-                />
-                <div className="divider" />
-                <PanelBody
-                  users={users}
-                  search={search}
-                  currentFilter={currentFilter}
-                  handleEdit={this.handleEdit}
-                  time={time}
-                />
-                <div ref={this.form}>
-                  <PanelFooter
-                    currentUser={currentUser}
-                    showForm={showForm}
-                    editForm={editForm}
-                    handleShowForm={this.handleShowForm}
-                    handleSubmit={this.handleSubmit}
-                    handleChange={this.handleChange}
-                    handleClickAvatar={this.handleClickAvatar}
-                    handleDelete={this.handleDelete}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="panel">
+        <PanelHeader
+          title={team.name}
+          subtitle={team.message}
+          avatar={team.avatar}
+          uri={team.id}
+          search={search}
+          time={time}
+          showBackLink
+          currentFilter={currentFilter}
+          handleSearch={this.handleSearch}
+          clearSearch={this.clearSearch}
+          handleClickFilter={this.handleClickFilter}
+        />
+        <div className="divider" />
+        <PanelBody
+          dataCollection={users}
+          search={search}
+          currentFilter={currentFilter}
+          handleEdit={this.handleEdit}
+          time={time}
+        />
+        <div ref={this.form}>
+          <PanelFooter
+            context="user"
+            data={currentUser}
+            errors={errors}
+            buttonText="Add member"
+            showForm={showForm}
+            editForm={editForm}
+            handleShowForm={this.handleShowForm}
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+            handleClickAvatar={this.handleClickAvatar}
+            handleDelete={this.handleDelete}
+          />
         </div>
       </div>
     );
   }
 }
 
-export default App;
+export default Users;

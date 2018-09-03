@@ -14,6 +14,12 @@
   color: #fff !important;
 }
 
+.btn-success {
+  background: #3bc673 !important;
+  border-color: #4fcc81 !important;
+  color: #fff !important;
+}
+
 .btn-link {
   color: #4f8fcc !important;
   border: none !important;
@@ -42,8 +48,17 @@
   color: #5755d9;
 }
 
+.text-primary {
+  color: #4f8fcc !important;
+}
+
 .text-error {
   color: #c74834 !important;
+}
+
+.text-no-underline,
+.text-no-underline:hover {
+  text-decoration: none;
 }
 
 .bar-item {
