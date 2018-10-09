@@ -128,7 +128,15 @@ class Users extends Component {
   clearSearch = () => this.setState({ search: '' });
 
   handleChange = (event, ref = false) => {
-    if (event && !event.target && ref) {
+    if (event && ref === 'status') {
+      this.setState(prevState => {
+        const user = { ...prevState.currentUser };
+        user.status = event.value;
+        return {
+          currentUser: user,
+        };
+      });
+    } else if (event && !event.target && ref) {
       this.setState(prevState => {
         const user = Object.assign({}, prevState.currentUser);
         user.focus_time[ref] = event.seconds(0).format();

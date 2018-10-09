@@ -5,6 +5,7 @@ import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
 import avatars from '../../constants/icons';
 import userModel from '../../models/UserModel';
+import status from '../../helpers/status';
 
 const UserForm = ({
   currentUser,
@@ -62,10 +63,12 @@ const UserForm = ({
             required
           />
           {errors &&
-              errors.name && <p className="form-input-hint">{errors.name.msg}</p>}
+            errors.name && <p className="form-input-hint">{errors.name.msg}</p>}
         </div>
       </div>
-      <div className={`form-group ${errors && errors.avatar ? 'has-error' : ''}`}>
+      <div
+        className={`form-group ${errors && errors.avatar ? 'has-error' : ''}`}
+      >
         <div className="col-3 col-sm-12">
           <label className="form-label" htmlFor="avatar">
             Avatar url
@@ -105,7 +108,9 @@ const UserForm = ({
           </div>
         </div>
       </div>
-      <div className={`form-group ${errors && errors.message ? 'has-error' : ''}`}>
+      <div
+        className={`form-group ${errors && errors.message ? 'has-error' : ''}`}
+      >
         <div className="col-3 col-sm-12">
           <label className="form-label" htmlFor="message">
             Message
@@ -126,25 +131,34 @@ const UserForm = ({
             )}
         </div>
       </div>
-      <div className={`form-group ${errors && errors.status ? 'has-error' : ''}`}>
+      <div
+        className={`form-group ${errors && errors.status ? 'has-error' : ''}`}
+      >
         <div className="col-3 col-sm-12">
           <label className="form-label" htmlFor="status">
             Status
           </label>
         </div>
         <div className="col-9 col-sm-12">
-          <select
-            className="form-select"
-            id="status"
-            multiple=""
-            value={currentUser.status}
-            onChange={handleChange}
-          >
-            <option>online</option>
-            <option>busy</option>
-            <option>away</option>
-            <option>offline</option>
-          </select>
+          <div className="text-center m-2">
+            {Object.entries(status).map(currentStatus => (
+              <span
+                key={currentStatus[0]}
+                className={`chip ${currentUser.status === currentStatus[0] &&
+                  `chip-${currentStatus[1].color}`} c-hand`}
+                role="button"
+                tabIndex={0}
+                onClick={() =>
+                  handleChange({ value: currentStatus[0] }, 'status')
+                }
+                onKeyPress={() =>
+                  handleChange({ value: currentStatus[0] }, 'status')
+                }
+              >
+                {currentStatus[0]}
+              </span>
+            ))}
+          </div>
           {errors &&
             errors.status && (
               <p className="form-input-hint">{errors.status.msg}</p>
