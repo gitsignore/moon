@@ -1,4 +1,4 @@
-# Moon &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/gitsignore/moon/blob/master/LICENSE)
+# Moon &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/gitsignore/moon/blob/master/LICENSE) [![GuardRails badge](https://badges.production.guardrails.io/gitsignore/moon.svg)](https://www.guardrails.io)
 
 Moon is a beautiful web interface to define team statuses like online, busy, away or offline.Your team should be focus on their work only, let Moon manage your time availability.
 
