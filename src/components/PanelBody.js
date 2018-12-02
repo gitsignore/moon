@@ -13,7 +13,7 @@ const PanelBody = ({
   search,
   time,
   currentFilter,
-  handleEdit,
+  handleEdit
 }) => {
   const data = dataCollection.getData();
 
@@ -26,12 +26,16 @@ const PanelBody = ({
       >
         <div className="tile">
           <div className="tile-icon">
-            <figure
-              className="avatar avatar-xl text-uppercase"
-              data-initial={team.name.substring(0, 2)}
-            >
-              {team.avatar && <img src={team.avatar} alt="Avatar" />}
-            </figure>
+            {team.avatar ? (
+              <figure className="avatar avatar-xl text-uppercase">
+                {team.avatar && <img src={team.avatar} alt="Avatar" />}
+              </figure>
+            ) : (
+              <figure
+                className="avatar avatar-xl text-uppercase"
+                data-initial={team.name.substring(0, 2)}
+              />
+            )}
           </div>
           <div className="tile-content">
             <p className="tile-title text-bold m-0">{team.name}</p>
@@ -121,7 +125,7 @@ const PanelBody = ({
                       data-tooltip={`${remainingTime + 1}min left`}
                       role="progressbar"
                       style={{
-                        width: `${progressTime}%`,
+                        width: `${progressTime}%`
                       }}
                     >
                       {`${remainingTime + 1}min left`}
@@ -140,17 +144,17 @@ const PanelBody = ({
 PanelBody.propTypes = {
   dataCollection: PropTypes.oneOfType([
     PropTypes.instanceOf(TeamCollection),
-    PropTypes.instanceOf(UserCollection),
+    PropTypes.instanceOf(UserCollection)
   ]).isRequired,
   search: PropTypes.string.isRequired,
   time: PropTypes.number,
   currentFilter: PropTypes.string,
-  handleEdit: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired
 };
 
 PanelBody.defaultProps = {
   currentFilter: null,
-  time: null,
+  time: null
 };
 
 export default PanelBody;

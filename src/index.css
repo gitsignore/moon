@@ -73,6 +73,11 @@
   border: 2px solid #ff1d39;
 }
 
+.avatar {
+  background: transparent;
+  color: #4f8fcc;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
