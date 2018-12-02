@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@gitsignore/http-client": "^1.0.2",
+    "@gitsignore/http-client": "^1.0.3",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "rc-time-picker": "^3.4.0",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
-    "socket.io-client": "^2.1.1"
+    "socket.io-client": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
