@@ -5,16 +5,18 @@ class User {
     name = '',
     avatar = '',
     status = 'online',
+    location = '',
     message = '',
     focusTime = {
       enabled: false,
       start: moment().format(),
-      end: moment().format(),
+      end: moment().format()
     }
   ) {
     this.name = name;
     this.avatar = avatar;
     this.status = status;
+    this.location = location;
     this.message = message;
     this.focus_time = focusTime;
   }
@@ -24,6 +26,7 @@ class User {
     this.name = data.name;
     this.avatar = data.avatar;
     this.status = data.status;
+    this.location = data.location;
     this.message = data.message;
     this.focus_time = data.focus_time;
 
