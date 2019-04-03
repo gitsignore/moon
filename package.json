@@ -1,16 +1,15 @@
 {
   "name": "moon",
-  "version": "1.0.0",
-  "private": true,
+  "version": "1.1.0",
   "dependencies": {
-    "@gitsignore/http-client": "^1.0.3",
-    "moment": "^2.22.2",
-    "prop-types": "^15.6.2",
-    "rc-time-picker": "^3.4.0",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.1",
+    "@gitsignore/http-client": "^1.0.4",
+    "moment": "^2.24.0",
+    "prop-types": "^15.7.2",
+    "rc-time-picker": "^3.6.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "2.1.8",
     "socket.io-client": "^2.2.0"
   },
   "scripts": {

@@ -103,6 +103,9 @@ const PanelBody = ({
                 'text-focus_time'}`}
             >
               {user.name}
+              {user.location && (
+                <span className="label text-normal ml-2">{user.location}</span>
+              )}
             </p>
             <p className="m-0">
               <span className={`label label-${displayedStatus[status].color}`}>

@@ -15,7 +15,7 @@ const UserForm = ({
   handleSubmit,
   handleChange,
   handleClickAvatar,
-  handleDelete,
+  handleDelete
 }) => (
   <div>
     <div className="columns">
@@ -106,6 +106,29 @@ const UserForm = ({
               ))}
             </div>
           </div>
+        </div>
+      </div>
+      <div
+        className={`form-group ${errors && errors.location ? 'has-error' : ''}`}
+      >
+        <div className="col-3 col-sm-12">
+          <label className="form-label" htmlFor="name">
+            Location
+          </label>
+        </div>
+        <div className="col-9 col-sm-12">
+          <input
+            className="form-input"
+            value={currentUser.location}
+            onChange={handleChange}
+            id="location"
+            type="text"
+            placeholder="Add your current location to be found by others"
+          />
+          {errors &&
+            errors.location && (
+              <p className="form-input-hint">{errors.location.msg}</p>
+            )}
         </div>
       </div>
       <div
@@ -232,7 +255,7 @@ UserForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleClickAvatar: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired
 };
 
 export default UserForm;
