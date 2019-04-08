@@ -18,10 +18,16 @@ To use `Moon` app you also need to install [moon-storage](https://github.com/git
    git clone https://github.com/gitsignore/moon && cd moon
    ```
 
-   - Use `Moon`'s integrated console to launch the app:
+   - Build `Moon`'s app:
 
    ```sh
-   bin/console start
+   docker build -t moon .
+   ```
+
+   - Run `Moon`'s app:
+
+   ```sh
+   docker run -e PORT=3000 -e REACT_APP_API_URI=http://localhost -e REACT_APP_API_PORT=8080 -e REACT_APP_API_ENTRYPOINT=/teams -p 3000:3000 -p 35729:35729 -v $(pwd):/usr/src/app --name moon -d moon
    ```
 
    - Open your browser to <http://localhost:3000>
