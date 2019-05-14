@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import openSocket from 'socket.io-client';
-import Client from '@gitsignore/http-client';
+import axios from 'axios';
 import PanelHeader from '../components/PanelHeader';
 import PanelBody from '../components/PanelBody';
 import PanelFooter from '../components/PanelFooter';
@@ -17,7 +17,7 @@ class Teams extends Component {
       search: '',
       errors: null,
       currentTeam: new TeamModel(),
-      teams: new TeamCollection(),
+      teams: new TeamCollection()
     };
 
     this.form = React.createRef();
@@ -31,18 +31,16 @@ class Teams extends Component {
 
   async componentDidMount() {
     try {
-      const response = await Client.GET('', {
-        url: process.env.REACT_APP_API_URI,
-        port: process.env.REACT_APP_API_PORT,
-        entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-      });
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URI}${
+          process.env.REACT_APP_API_ENTRYPOINT
+        }`
+      );
 
-      const teamCollection = new TeamCollection(response);
+      const teamCollection = new TeamCollection(data);
       this.setState({ teams: teamCollection });
 
-      const socket = openSocket(
-        `${process.env.REACT_APP_API_URI}:${process.env.REACT_APP_API_PORT}`
-      );
+      const socket = openSocket(process.env.REACT_APP_API_URI);
       socket.on('update_teams', teams => {
         const socketTeamCollection = new TeamCollection(teams);
         return this.setState({ teams: socketTeamCollection });
@@ -58,7 +56,7 @@ class Teams extends Component {
         showForm: !prevState.showForm,
         editForm: false,
         errors: null,
-        currentTeam: new TeamModel(),
+        currentTeam: new TeamModel()
       }),
       () => {
         const { showForm } = this.state;
@@ -81,7 +79,7 @@ class Teams extends Component {
         const team = Object.assign({}, prevState.currentTeam);
 
         return {
-          currentUser: team,
+          currentUser: team
         };
       });
     } else {
@@ -97,7 +95,7 @@ class Teams extends Component {
 
         return {
           currentTeam: team,
-          errors,
+          errors
         };
       });
     }
@@ -107,11 +105,11 @@ class Teams extends Component {
     event.preventDefault();
 
     try {
-      const response = await Client.GET(`/${id}`, {
-        url: process.env.REACT_APP_API_URI,
-        port: process.env.REACT_APP_API_PORT,
-        entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-      });
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URI}${
+          process.env.REACT_APP_API_ENTRYPOINT
+        }/${id}`
+      );
 
       const team = new TeamModel();
       this.setState(
@@ -119,7 +117,7 @@ class Teams extends Component {
           showForm: true,
           editForm: true,
           errors: null,
-          currentTeam: team.setTeam(response),
+          currentTeam: team.setTeam(data)
         },
         () => {
           const { showForm } = this.state;
@@ -138,17 +136,17 @@ class Teams extends Component {
 
     const { currentTeam } = this.state;
     try {
-      const response = await Client.DELETE(`/${currentTeam.id}`, {
-        url: process.env.REACT_APP_API_URI,
-        port: process.env.REACT_APP_API_PORT,
-        entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-      });
+      const { data } = await axios.delete(
+        `${process.env.REACT_APP_API_URI}${
+          process.env.REACT_APP_API_ENTRYPOINT
+        }/${currentTeam.id}`
+      );
 
       this.setState(prevState => ({
-        teams: prevState.teams.removeById(response.id.toString()),
+        teams: prevState.teams.removeById(data.id.toString()),
         currentTeam: new TeamModel(),
         showForm: false,
-        editForm: false,
+        editForm: false
       }));
     } catch (error) {
       throw error;
@@ -160,29 +158,26 @@ class Teams extends Component {
 
     const { currentTeam, editForm } = this.state;
     try {
-      const response = await Client[editForm ? 'PUT' : 'POST'](
-        `/${editForm ? currentTeam.id : ''}`,
-        currentTeam,
-        {
-          url: process.env.REACT_APP_API_URI,
-          port: process.env.REACT_APP_API_PORT,
-          entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-        }
+      const { data } = await axios[editForm ? 'put' : 'post'](
+        `${process.env.REACT_APP_API_URI}${
+          process.env.REACT_APP_API_ENTRYPOINT
+        }/${editForm ? currentTeam.id : ''}`,
+        currentTeam
       );
 
-      if (response.errors) {
-        this.setState({ errors: response.errors });
+      if (data.errors) {
+        this.setState({ errors: data.errors });
       } else {
         this.setState(prevState => {
           const teamIndex = prevState.teams
             .getData()
-            .findIndex(team => team.id === response.id);
+            .findIndex(team => team.id === data.id);
 
           const teams = prevState.teams.getData().slice();
           if (teamIndex < 0) {
-            teams.push(response);
+            teams.push(data);
           } else {
-            teams[teamIndex] = response;
+            teams[teamIndex] = data;
           }
 
           const teamCollection = new TeamCollection(teams);
@@ -190,7 +185,7 @@ class Teams extends Component {
             teams: teamCollection,
             currentTeam: new TeamModel(),
             showForm: false,
-            editForm: false,
+            editForm: false
           };
         });
       }
@@ -206,7 +201,7 @@ class Teams extends Component {
       errors,
       showForm,
       search,
-      editForm,
+      editForm
     } = this.state;
 
     return (

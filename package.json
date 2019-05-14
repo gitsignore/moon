@@ -2,7 +2,7 @@
   "name": "moon",
   "version": "1.1.0",
   "dependencies": {
-    "@gitsignore/http-client": "^1.0.4",
+    "axios": "^0.18.0",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "rc-time-picker": "^3.6.2",

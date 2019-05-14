@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import openSocket from 'socket.io-client';
-import Client from '@gitsignore/http-client';
+import axios from 'axios';
 import PanelHeader from '../components/PanelHeader';
 import PanelBody from '../components/PanelBody';
 import PanelFooter from '../components/PanelFooter';
@@ -21,7 +21,7 @@ class Users extends Component {
       errors: null,
       currentFilter: null,
       currentUser: new UserModel(),
-      time: Date.now(),
+      time: Date.now()
     };
 
     this.form = React.createRef();
@@ -39,25 +39,23 @@ class Users extends Component {
     const { match, history } = this.props;
 
     try {
-      const response = await Client.GET(`/${match.params.id}`, {
-        url: process.env.REACT_APP_API_URI,
-        port: process.env.REACT_APP_API_PORT,
-        entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-      });
-
-      const userCollection = new UserCollection(response.users);
-      this.setState({ team: response, users: userCollection });
-
-      const socket = openSocket(
-        `${process.env.REACT_APP_API_URI}:${process.env.REACT_APP_API_PORT}`
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URI}${
+          process.env.REACT_APP_API_ENTRYPOINT
+        }/${match.params.id}`
       );
+
+      const userCollection = new UserCollection(data.users);
+      this.setState({ team: data, users: userCollection });
+
+      const socket = openSocket(process.env.REACT_APP_API_URI);
       socket.on(`update_team_${match.params.id}`, team =>
         this.setState({
           team: team || new TeamModel(),
           users:
             team && team.users
               ? new UserCollection(team.users)
-              : new UserCollection(),
+              : new UserCollection()
         })
       );
       this.interval = setInterval(() => this.tick(), 1000);
@@ -75,7 +73,7 @@ class Users extends Component {
       prevState => ({
         showForm: !prevState.showForm,
         editForm: false,
-        currentUser: new UserModel(),
+        currentUser: new UserModel()
       }),
       () => {
         const { showForm } = this.state;
@@ -93,7 +91,7 @@ class Users extends Component {
         showForm: true,
         editForm: true,
         errors: null,
-        currentUser: user.setUser(prevState.users.findOneById(id)),
+        currentUser: user.setUser(prevState.users.findOneById(id))
       }),
       () => {
         const { showForm } = this.state;
@@ -110,14 +108,14 @@ class Users extends Component {
       user.avatar = avatar;
 
       return {
-        currentUser: user,
+        currentUser: user
       };
     });
   };
 
   handleClickFilter = filterName => {
     this.setState(prevState => ({
-      currentFilter: prevState.currentFilter !== filterName ? filterName : null,
+      currentFilter: prevState.currentFilter !== filterName ? filterName : null
     }));
   };
 
@@ -133,7 +131,7 @@ class Users extends Component {
         const user = { ...prevState.currentUser };
         user.status = event.value;
         return {
-          currentUser: user,
+          currentUser: user
         };
       });
     } else if (event && !event.target && ref) {
@@ -142,7 +140,7 @@ class Users extends Component {
         user.focus_time[ref] = event.seconds(0).format();
 
         return {
-          currentUser: user,
+          currentUser: user
         };
       });
     } else {
@@ -166,7 +164,7 @@ class Users extends Component {
 
         return {
           currentUser: user,
-          errors,
+          errors
         };
       });
     }
@@ -178,20 +176,17 @@ class Users extends Component {
     const { currentUser } = this.state;
     const { match } = this.props;
     try {
-      const response = await Client.DELETE(
-        `/${match.params.id}/users/${currentUser.id}`,
-        {
-          url: process.env.REACT_APP_API_URI,
-          port: process.env.REACT_APP_API_PORT,
-          entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-        }
+      const { data } = await axios.delete(
+        `${process.env.REACT_APP_API_URI}${
+          process.env.REACT_APP_API_ENTRYPOINT
+        }/${match.params.id}/users/${currentUser.id}`
       );
 
       this.setState(prevState => ({
-        users: prevState.users.removeById(response.userId.toString()),
+        users: prevState.users.removeById(data.userId.toString()),
         currentUser: new UserModel(),
         showForm: false,
-        editForm: false,
+        editForm: false
       }));
     } catch (error) {
       throw error;
@@ -204,29 +199,26 @@ class Users extends Component {
     const { currentUser, editForm } = this.state;
     const { match } = this.props;
     try {
-      const response = await Client[editForm ? 'PUT' : 'POST'](
-        `/${match.params.id}/users/${editForm ? currentUser.id : ''}`,
-        currentUser,
-        {
-          url: process.env.REACT_APP_API_URI,
-          port: process.env.REACT_APP_API_PORT,
-          entrypoint: process.env.REACT_APP_API_ENTRYPOINT,
-        }
+      const { data } = await axios[editForm ? 'put' : 'post'](
+        `${process.env.REACT_APP_API_URI}${
+          process.env.REACT_APP_API_ENTRYPOINT
+        }/${match.params.id}/users/${editForm ? currentUser.id : ''}`,
+        currentUser
       );
 
-      if (response.errors) {
-        this.setState({ errors: response.errors });
+      if (data.errors) {
+        this.setState({ errors: data.errors });
       } else {
         this.setState(prevState => {
           const userIndex = prevState.users
             .getData()
-            .findIndex(user => user.id === response.id);
+            .findIndex(user => user.id === data.id);
 
           const users = prevState.users.getData().slice();
           if (userIndex < 0) {
-            users.push(response);
+            users.push(data);
           } else {
-            users[userIndex] = response;
+            users[userIndex] = data;
           }
 
           const userCollection = new UserCollection(users);
@@ -234,7 +226,7 @@ class Users extends Component {
             users: userCollection,
             currentUser: new UserModel(),
             showForm: false,
-            editForm: false,
+            editForm: false
           };
         });
       }
@@ -245,7 +237,7 @@ class Users extends Component {
 
   tick() {
     this.setState({
-      time: Date.now(),
+      time: Date.now()
     });
   }
 
@@ -259,7 +251,7 @@ class Users extends Component {
       showForm,
       editForm,
       currentUser,
-      currentFilter,
+      currentFilter
     } = this.state;
     return (
       <div className="panel">
