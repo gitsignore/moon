@@ -2,19 +2,19 @@ import isBusy from './time';
 
 const sortUsersListByPriority = (usersList, filter = null, search = '') =>
   usersList
-    .filter(
-      user =>
-        filter
-          ? user.status === filter ||
-            (filter === 'busy' &&
-              user.focus_time.enabled &&
-              isBusy(user.focus_time.start, user.focus_time.end, Date.now()))
-          : true
+    .filter(user =>
+      filter
+        ? user.status === filter ||
+          (filter === 'busy' &&
+            user.focus_time.enabled &&
+            isBusy(user.focus_time.start, user.focus_time.end, Date.now()))
+        : true
     )
     .filter(
       user =>
         user.name.toLowerCase().match(search.toLowerCase().trim()) ||
-        user.message.toLowerCase().match(search.toLowerCase().trim())
+        user.message.toLowerCase().match(search.toLowerCase().trim()) ||
+        user.location.toLowerCase().match(search.toLowerCase().trim())
     )
     .sort((user1, user2) => {
       const busyUser1 =
