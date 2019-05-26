@@ -15,7 +15,7 @@ const PanelHeader = ({
   currentFilter,
   handleClickFilter,
   clearSearch,
-  handleSearch,
+  handleSearch
 }) => (
   <div className="panel-header">
     {showBackLink && (
@@ -100,7 +100,7 @@ PanelHeader.propTypes = {
   currentFilter: PropTypes.string,
   handleClickFilter: PropTypes.func,
   clearSearch: PropTypes.func,
-  handleSearch: PropTypes.func,
+  handleSearch: PropTypes.func
 };
 
 PanelHeader.defaultProps = {
@@ -114,7 +114,7 @@ PanelHeader.defaultProps = {
   currentFilter: null,
   handleClickFilter: null,
   clearSearch: null,
-  handleSearch: null,
+  handleSearch: null
 };
 
 export default PanelHeader;

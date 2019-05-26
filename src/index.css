@@ -3,6 +3,18 @@
   height: 80px;
 }
 
+.panel {
+  border-radius: 1rem;
+}
+
+.form-input {
+  border-radius: 1rem;
+}
+
+.btn {
+  border-radius: 1rem;
+}
+
 .label,
 .tile-subtitle {
   font-size: 0.6rem;

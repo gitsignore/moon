@@ -14,38 +14,36 @@ const PanelFooter = ({
   handleSubmit,
   handleChange,
   handleClickAvatar,
-  handleDelete,
+  handleDelete
 }) => (
   <div className="panel-footer">
-    {showForm &&
-      context === 'user' && (
-        <UserForm
-          currentUser={data}
-          errors={errors}
-          editForm={editForm}
-          handleShowForm={handleShowForm}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          handleClickAvatar={handleClickAvatar}
-          handleDelete={handleDelete}
-        />
-      )}
-    {showForm &&
-      context === 'team' && (
-        <TeamForm
-          currentTeam={data}
-          errors={errors}
-          editForm={editForm}
-          handleShowForm={handleShowForm}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          handleClickAvatar={handleClickAvatar}
-          handleDelete={handleDelete}
-        />
-      )}
+    {showForm && context === 'user' && (
+      <UserForm
+        currentUser={data}
+        errors={errors}
+        editForm={editForm}
+        handleShowForm={handleShowForm}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        handleClickAvatar={handleClickAvatar}
+        handleDelete={handleDelete}
+      />
+    )}
+    {showForm && context === 'team' && (
+      <TeamForm
+        currentTeam={data}
+        errors={errors}
+        editForm={editForm}
+        handleShowForm={handleShowForm}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        handleClickAvatar={handleClickAvatar}
+        handleDelete={handleDelete}
+      />
+    )}
     {!showForm && (
       <button
-        className="btn btn-primary btn-block"
+        className="btn btn-primary s-circle btn-block"
         type="button"
         onClick={handleShowForm}
       >
@@ -62,7 +60,7 @@ PanelFooter.propTypes = {
       name: PropTypes.string,
       avatar: PropTypes.string,
       message: PropTypes.string,
-      users: PropTypes.array,
+      users: PropTypes.array
     }),
     PropTypes.shape({
       id: PropTypes.string,
@@ -73,9 +71,9 @@ PanelFooter.propTypes = {
       focus_time: PropTypes.shape({
         enabled: PropTypes.bool,
         start: PropTypes.string,
-        end: PropTypes.string,
-      }),
-    }),
+        end: PropTypes.string
+      })
+    })
   ]).isRequired,
   errors: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   buttonText: PropTypes.string,
@@ -85,14 +83,14 @@ PanelFooter.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleClickAvatar: PropTypes.func,
-  handleDelete: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired
 };
 
 PanelFooter.defaultProps = {
   context: 'team',
   errors: null,
   buttonText: 'Add team',
-  handleClickAvatar: null,
+  handleClickAvatar: null
 };
 
 export default PanelFooter;
