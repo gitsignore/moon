@@ -1,8 +1,14 @@
 import React from 'react';
-import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import SearchBar from './searchBar';
+import Breadcrumb from './breadcrumb';
+import Clock from './clock';
+import Avatar from './avatar';
+import PanelTitle from './panelTitle';
+import PanelSubtitle from './panelSubtitle';
+import Chip from './chip';
 import status from '../helpers/status';
+import moon from '../assets/images/moon.png';
 
 const PanelHeader = ({
   title,
@@ -11,80 +17,56 @@ const PanelHeader = ({
   uri,
   search,
   time,
-  showBackLink,
   currentFilter,
   handleClickFilter,
   clearSearch,
   handleSearch
 }) => (
   <div className="panel-header">
-    {showBackLink && (
-      <div className="col-12 col-mx-auto">
-        <div className="col-8 d-inline-block">
-          <ul className="breadcrumb">
-            <li className="breadcrumb-item">
-              <Link to="/">Workspaces</Link>
-            </li>
-            {uri && (
-              <li className="breadcrumb-item">
-                <Link to={`/${uri}`}>{title}</Link>
-              </li>
-            )}
-          </ul>
-        </div>
-        {time && (
-          <div className="col-4 d-inline-block text-right">
-            <div className="panel-title h4">{moment(time).format('HH:mm')}</div>
-          </div>
-        )}
-        <div className="divider" />
+    <div className="col-12 d-inline-block text-center show-xs">
+      <img src={moon} className="logo" alt="moon-logo" />
+      <p className="h1 d-inline-block">&nbsp;Moon</p>
+    </div>
+    <div className="col-12 col-mx-auto">
+      <div className="col-xs-8 col-4 d-inline-block">
+        <Breadcrumb uri={uri} title={title} />
       </div>
-    )}
-    <div className="col-12 col-mx-auto text-center">
-      {avatar && (
-        <figure className="avatar avatar-xl">
-          <img src={avatar} alt="Avatar" />
-        </figure>
+      <div className="col-4 d-inline-block text-center hide-xs">
+        <img src={moon} className="logo" alt="moon-logo" />
+        <p className="h1 d-inline-block">&nbsp;Moon</p>
+      </div>
+      {time && (
+        <div className="col-4 d-inline-block text-right">
+          <Clock time={time} />
+        </div>
       )}
-      <div className="panel-title h3">{title}</div>
+      {title && <div className="divider" />}
     </div>
     <div className="col-12 col-mx-auto text-center">
-      {subtitle && <div className="panel-subtitle">{subtitle}</div>}
+      {avatar && <Avatar link={avatar} />}
+      <PanelTitle title={title} />
+    </div>
+    <div className="col-12 col-mx-auto text-center">
+      <PanelSubtitle title={subtitle} />
     </div>
     <div className="text-center m-2">
-      {handleClickFilter &&
-        Object.entries(status).map(currentStatus => (
-          <span
-            key={currentStatus[0]}
-            className={`chip ${currentFilter === currentStatus[0] &&
-              `chip-${currentStatus[1].color}`} c-hand`}
-            role="button"
-            tabIndex={0}
-            onClick={() => handleClickFilter(currentStatus[0])}
-            onKeyPress={() => handleClickFilter(currentStatus[0])}
-          >
-            {currentStatus[0]}
-          </span>
-        ))}
+      {Object.entries(status).map(currentStatus => (
+        <Chip
+          key={currentStatus[0]}
+          text={currentStatus[0]}
+          color={
+            currentFilter === currentStatus[0] ? currentStatus[1].color : ''
+          }
+          handleClickFilter={handleClickFilter}
+        />
+      ))}
     </div>
     {handleSearch && (
-      <div className="has-icon-right mt-2">
-        <input
-          id="search"
-          className="form-input"
-          type="text"
-          value={search}
-          onChange={handleSearch}
-          placeholder="Search"
-        />
-        <i
-          className="form-icon icon icon-cross c-hand"
-          role="button"
-          tabIndex={0}
-          onClick={clearSearch}
-          onKeyPress={clearSearch}
-        />
-      </div>
+      <SearchBar
+        search={search}
+        handleSearch={handleSearch}
+        clearSearch={clearSearch}
+      />
     )}
   </div>
 );
@@ -96,7 +78,6 @@ PanelHeader.propTypes = {
   uri: PropTypes.string,
   search: PropTypes.string,
   time: PropTypes.number,
-  showBackLink: PropTypes.bool,
   currentFilter: PropTypes.string,
   handleClickFilter: PropTypes.func,
   clearSearch: PropTypes.func,
@@ -104,13 +85,12 @@ PanelHeader.propTypes = {
 };
 
 PanelHeader.defaultProps = {
-  title: 'Workspaces',
+  title: '',
   subtitle: '',
   avatar: null,
   uri: null,
   search: '',
   time: null,
-  showBackLink: false,
   currentFilter: null,
   handleClickFilter: null,
   clearSearch: null,

@@ -1,6 +1,11 @@
+a,
+a:visited {
+  color: #4f8fcc;
+}
+
 .logo {
   animation: App-logo-spin infinite 60s linear;
-  height: 80px;
+  height: 35px;
 }
 
 .panel {
@@ -27,8 +32,8 @@
 }
 
 .btn-success {
-  background: #3bc673 !important;
-  border-color: #4fcc81 !important;
+  background: #4fcc8c !important;
+  border-color: #3bc67f !important;
   color: #fff !important;
 }
 
@@ -46,7 +51,7 @@
 .label-error,
 .chip-error {
   background: #faeeec !important;
-  color: #c74834 !important;
+  color: #cc4f51 !important;
 }
 
 .label-warning,
@@ -65,7 +70,7 @@
 }
 
 .text-error {
-  color: #c74834 !important;
+  color: #cc4f51 !important;
 }
 
 .text-no-underline,

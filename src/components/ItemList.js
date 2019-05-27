@@ -2,16 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import TileAction from './tileAction';
-import TileIcon from './tileIcon';
-import TileContent from './tileContent';
 import displayedStatus from '../helpers/status';
 import { filterTeamsBySearch, sortUsersListByPriority } from '../helpers/list';
 import isBusy from '../helpers/time';
 import TeamCollection from '../models/TeamCollection';
 import UserCollection from '../models/UserCollection';
 
-const PanelBody = ({
+const ItemList = ({
   dataCollection,
   search,
   time,
@@ -28,9 +25,32 @@ const PanelBody = ({
         className="panel-body text-primary text-no-underline"
       >
         <div className="tile">
-          <TileIcon link={team.avatar} text={team.name} />
-          <TileContent title={team.name} subtitle={team.message} />
-          <TileAction action={handleEdit} parameter={team.id} />
+          <div className="tile-icon">
+            {team.avatar ? (
+              <figure className="avatar avatar-xl text-uppercase">
+                {team.avatar && <img src={team.avatar} alt="Avatar" />}
+              </figure>
+            ) : (
+              <figure
+                className="avatar avatar-xl text-uppercase"
+                data-initial={team.name.substring(0, 2)}
+              />
+            )}
+          </div>
+          <div className="tile-content">
+            <p className="tile-title text-bold m-0">{team.name}</p>
+            <p className="tile-subtitle m-0">{team.message}</p>
+          </div>
+          <div className="tile-action">
+            <button
+              className="btn btn-link"
+              type="button"
+              onClick={e => handleEdit(e, team.id)}
+              onKeyPress={e => handleEdit(e, team.id)}
+            >
+              <i className="icon icon-edit text-warning" />
+            </button>
+          </div>
         </div>
         <div className="divider" />
       </Link>
@@ -62,12 +82,21 @@ const PanelBody = ({
           onClick={() => handleEdit(user.id)}
           onKeyPress={() => handleEdit(user.id)}
         >
-          <TileIcon
-            link={user.avatar}
-            text={user.name}
-            imgClass={userInFocusTime ? 'img-focus_time' : ''}
-            status={status}
-          />
+          <div className="tile-icon">
+            <figure
+              className="avatar avatar-xl text-uppercase"
+              data-initial={user.name.substring(0, 2)}
+            >
+              {user.avatar && (
+                <img
+                  src={user.avatar}
+                  alt="Avatar"
+                  className={userInFocusTime ? 'img-focus_time' : ''}
+                />
+              )}
+              <i className={`avatar-presence ${status}`} />
+            </figure>
+          </div>
           <div className="tile-content">
             <p
               className={`tile-title text-bold m-0 ${userInFocusTime &&
@@ -115,7 +144,7 @@ const PanelBody = ({
   });
 };
 
-PanelBody.propTypes = {
+ItemList.propTypes = {
   dataCollection: PropTypes.oneOfType([
     PropTypes.instanceOf(TeamCollection),
     PropTypes.instanceOf(UserCollection)
@@ -126,9 +155,9 @@ PanelBody.propTypes = {
   handleEdit: PropTypes.func.isRequired
 };
 
-PanelBody.defaultProps = {
+ItemList.defaultProps = {
   currentFilter: null,
   time: null
 };
 
-export default PanelBody;
+export default ItemList;

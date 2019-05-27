@@ -62,8 +62,9 @@ const UserForm = ({
             placeholder="Name"
             required
           />
-          {errors &&
-            errors.name && <p className="form-input-hint">{errors.name.msg}</p>}
+          {errors && errors.name && (
+            <p className="form-input-hint">{errors.name.msg}</p>
+          )}
         </div>
       </div>
       <div
@@ -83,10 +84,9 @@ const UserForm = ({
             type="text"
             placeholder="Avatar URL"
           />
-          {errors &&
-            errors.avatar && (
-              <p className="form-input-hint">{errors.avatar.msg}</p>
-            )}
+          {errors && errors.avatar && (
+            <p className="form-input-hint">{errors.avatar.msg}</p>
+          )}
           <div className="divider text-center" data-content="OR" />
           <div className="colums">
             <div className="col-12 col-mx-auto text-center">
@@ -125,10 +125,9 @@ const UserForm = ({
             type="text"
             placeholder="Add your current location to be found by others"
           />
-          {errors &&
-            errors.location && (
-              <p className="form-input-hint">{errors.location.msg}</p>
-            )}
+          {errors && errors.location && (
+            <p className="form-input-hint">{errors.location.msg}</p>
+          )}
         </div>
       </div>
       <div
@@ -148,10 +147,9 @@ const UserForm = ({
             placeholder="Current status you want to share"
             rows="3"
           />
-          {errors &&
-            errors.message && (
-              <p className="form-input-hint">{errors.message.msg}</p>
-            )}
+          {errors && errors.message && (
+            <p className="form-input-hint">{errors.message.msg}</p>
+          )}
         </div>
       </div>
       <div
@@ -182,10 +180,9 @@ const UserForm = ({
               </span>
             ))}
           </div>
-          {errors &&
-            errors.status && (
-              <p className="form-input-hint">{errors.status.msg}</p>
-            )}
+          {errors && errors.status && (
+            <p className="form-input-hint">{errors.status.msg}</p>
+          )}
         </div>
       </div>
       <div className="form-group">
