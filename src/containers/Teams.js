@@ -142,12 +142,15 @@ class Teams extends Component {
         }/${currentTeam.id}`
       );
 
-      this.setState(prevState => ({
-        teams: prevState.teams.removeById(data.id.toString()),
-        currentTeam: new TeamModel(),
-        showForm: false,
-        editForm: false
-      }));
+      if (data.errors) {
+        this.setState({ errors: data.errors });
+      } else {
+        this.setState({
+          currentTeam: new TeamModel(),
+          showForm: false,
+          editForm: false
+        });
+      }
     } catch (error) {
       throw error;
     }
@@ -168,25 +171,10 @@ class Teams extends Component {
       if (data.errors) {
         this.setState({ errors: data.errors });
       } else {
-        this.setState(prevState => {
-          const teamIndex = prevState.teams
-            .getData()
-            .findIndex(team => team.id === data.id);
-
-          const teams = prevState.teams.getData().slice();
-          if (teamIndex < 0) {
-            teams.push(data);
-          } else {
-            teams[teamIndex] = data;
-          }
-
-          const teamCollection = new TeamCollection(teams);
-          return {
-            teams: teamCollection,
-            currentTeam: new TeamModel(),
-            showForm: false,
-            editForm: false
-          };
+        this.setState({
+          currentTeam: new TeamModel(),
+          showForm: false,
+          editForm: false
         });
       }
     } catch (error) {
