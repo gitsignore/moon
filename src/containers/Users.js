@@ -182,12 +182,15 @@ class Users extends Component {
         }/${match.params.id}/users/${currentUser.id}`
       );
 
-      this.setState(prevState => ({
-        users: prevState.users.removeById(data.userId.toString()),
-        currentUser: new UserModel(),
-        showForm: false,
-        editForm: false
-      }));
+      if (data.errors) {
+        this.setState({ errors: data.errors });
+      } else {
+        this.setState({
+          currentUser: new UserModel(),
+          showForm: false,
+          editForm: false
+        });
+      }
     } catch (error) {
       throw error;
     }
@@ -209,25 +212,10 @@ class Users extends Component {
       if (data.errors) {
         this.setState({ errors: data.errors });
       } else {
-        this.setState(prevState => {
-          const userIndex = prevState.users
-            .getData()
-            .findIndex(user => user.id === data.id);
-
-          const users = prevState.users.getData().slice();
-          if (userIndex < 0) {
-            users.push(data);
-          } else {
-            users[userIndex] = data;
-          }
-
-          const userCollection = new UserCollection(users);
-          return {
-            users: userCollection,
-            currentUser: new UserModel(),
-            showForm: false,
-            editForm: false
-          };
+        this.setState({
+          currentUser: new UserModel(),
+          showForm: false,
+          editForm: false
         });
       }
     } catch (error) {

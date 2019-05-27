@@ -5,11 +5,11 @@
     "axios": "^0.18.0",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
-    "rc-time-picker": "^3.6.2",
+    "rc-time-picker": "^3.6.6",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
+    "react-scripts": "3.0.1",
     "socket.io-client": "^2.2.0"
   },
   "scripts": {
